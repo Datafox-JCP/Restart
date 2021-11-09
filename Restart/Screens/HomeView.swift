@@ -11,6 +11,7 @@ struct HomeView: View {
     // MARK: - Propiedades
     
     @AppStorage("onboarding") var isOnboardingViewActive: Bool = false
+    @State private var isAnimating: Bool = false
     
     // MARK: -  Body
     var body: some View {
@@ -23,11 +24,17 @@ struct HomeView: View {
                 Image("character-2")
                     .resizable()
                     .scaledToFit()
-                .padding()
+                    .padding()
+                    .offset(y: isAnimating ? 35 : -35)
+                    .animation(Animation
+                                .easeInOut(duration: 4)
+                                .repeatForever()
+                               , value: isAnimating
+                    )
             } // ZStack
             
             // MARK: - Center
-            Text("The tome taht leads to mastery is dependent on the intensity of our focus")
+            Text("The road that leads to mastery is dependent on the intensity of your focus")
                 .font(.title3)
                 .fontWeight(.light)
                 .foregroundColor(.secondary)
@@ -38,7 +45,9 @@ struct HomeView: View {
             Spacer()
             
             Button(action: {
-                isOnboardingViewActive = true
+                withAnimation {
+                    isOnboardingViewActive = true
+                }
             }) {
                 Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
                     .imageScale(.large)
@@ -51,6 +60,11 @@ struct HomeView: View {
             .buttonBorderShape(.capsule)
             .controlSize(.large)
         } // VStack
+        .onAppear(perform: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                isAnimating = true
+            }
+        })
     }
 }
 
