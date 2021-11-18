@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    // MARK: - Propiedades
+    // MARK: - PROPERTIES
     
     @AppStorage("onboarding") var isOnboardingViewActive: Bool = true
     
@@ -19,7 +19,9 @@ struct OnboardingView: View {
     @State private var indicatorOpacity: Double = 1.0
     @State private var textTitle: String = "Never give in"
     
-    // MARK: -  Body
+    let hapticFeedback = UINotificationFeedbackGenerator()
+    
+    // MARK: -  BODY
     var body: some View {
         ZStack {
             Color("ColorBlue")
@@ -103,7 +105,7 @@ struct OnboardingView: View {
                 ZStack {
                     // PARTS OF THE CUSTOM BUTTON
                     
-                    // 1. BACKGROUND (STATIC)
+                    // MARK: 1. BACKGROUND (STATIC)
                     Capsule()
                         .fill(Color.white.opacity(0.2))
                     
@@ -111,14 +113,14 @@ struct OnboardingView: View {
                         .fill(Color.white.opacity(0.2))
                         .padding(8)
                     
-                    // 2. CALL-TO-ACTION (STATIC)
+                    // MARK: 2. CALL-TO-ACTION (STATIC)
                     Text("Get started")
                         .font(.system(.title3, design: .rounded))
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                         .offset(x: 20)
                     
-                    // 3. CAPSULE (DYNAMIC WIDTH)
+                    // MARK: 3. CAPSULE (DYNAMIC WIDTH)
                     HStack {
                         Capsule()
                             .fill(Color("ColorRed"))
@@ -126,7 +128,7 @@ struct OnboardingView: View {
                         
                         Spacer()
                     }
-                    // 4. CIRCLE (DRAGGABLE)
+                    // MARK: 4. CIRCLE (DRAGGABLE)
                     HStack {
                         ZStack {
                             Circle ()
@@ -150,9 +152,12 @@ struct OnboardingView: View {
                                 .onEnded { _  in
                                     withAnimation(Animation.easeOut(duration: 0.4)) {
                                         if buttonOffeset > buttonWidth / 2 {
+                                            hapticFeedback.notificationOccurred(.success)
+                                            playSound(sound: "chimeup", type: "mp3")
                                             buttonOffeset = buttonWidth - 80
                                             isOnboardingViewActive = false
                                         } else {
+                                            hapticFeedback.notificationOccurred(.warning)
                                             buttonOffeset = 0
                                         }
                                     }
@@ -172,11 +177,12 @@ struct OnboardingView: View {
         .onAppear(perform: {
             isAnimating = true
         })
+        .preferredColorScheme(.dark)
     }
 }
 
 
-// MARK: - Vista preliminar
+// MARK: - PREVIEW
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingView()

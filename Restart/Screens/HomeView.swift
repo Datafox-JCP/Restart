@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    // MARK: - Propiedades
+    // MARK: - Properties
     
     @AppStorage("onboarding") var isOnboardingViewActive: Bool = false
     @State private var isAnimating: Bool = false
@@ -46,6 +46,7 @@ struct HomeView: View {
             
             Button(action: {
                 withAnimation {
+                    playSound(sound: "success", type: "m4a")
                     isOnboardingViewActive = true
                 }
             }) {
@@ -69,7 +70,7 @@ struct HomeView: View {
 }
 
 
-// MARK: - Vista preliminar
+// MARK: - Preview
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
